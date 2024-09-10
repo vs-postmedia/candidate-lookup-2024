@@ -21,6 +21,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@maplibre/maplibre-gl-geocoder": "^1.7.0",
+		"@turf/helpers": "^7.1.0",
+		"@turf/points-within-polygon": "^7.1.0",
 		"d3-dsv": "^3.0.1",
 		"papaparse": "^5.4.1",
 		"svelte-select": "^5.7.0"

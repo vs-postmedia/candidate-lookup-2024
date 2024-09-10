@@ -2,20 +2,28 @@
     // COMPONENTS
     import { onMount } from 'svelte';
     import Papa from 'papaparse';
+    import * as turf from '@turf/helpers';
+    import PointsWithinPolygon from '@turf/points-within-polygon';
+    import RidingDetails from '$components/RidingDetails.svelte';
     import Select from "svelte-select"; // https://github.com/rob-balfre/svelte-select
 
-    
 
     // DATA
-    // import data from "$data/data.js";
-    import { menuItems } from "$data/menu-items";
-    const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=0&single=true&output=csv';
+    import { menuItems } from '$data/menu-items';
+    import ridings from '$data/riding-boundaries-2024.js';
+    const candidatesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=0&single=true&output=csv';
+    const resultsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=715680360&single=true&output=csv';
+
 
     // VARIABLES
-    let data, value;
+    let candidateData, resultsData, value;
     const defaultSelectValue = menuItems[0].value;
+    let latlon = [-123.19361394392898, 49.400479859367884];
 
     // REACTIVE VARIABLES
+    $: ridingName = '';
+    $: ridingResults = [];
+    $: ridingCandidates = [];
     $: value, updateData(value);
 
     async function fetchData(url) {
@@ -36,17 +44,52 @@
         // return csvParse(data);
     }
 
+    function getCandidates(ridingName, data) {
+        return data.filter(d => d.electoral_district === ridingName);
+    }
+
+    function getResults(ridingName, data) {
+        return data.filter(d => d.electoral_district === ridingName);
+    }
+
+    function getRiding(latlon, riding) {
+        let ridingName;
+        const point = turf.point(latlon);
+        // const point = turf.point([e.lngLat.lng, e.lngLat.lat]);
+
+        // find out which riding the point is inside
+	    ridings.features.forEach(d => {
+		    // find which polygon the point is within
+		    const withinPoly = PointsWithinPolygon(point, d);
+		    // if so, let's cache the buffer
+		    if (withinPoly.features.length > 0) {
+                ridingName = d.properties.ED_NAME;
+                return;
+            }
+	    });
+
+        return ridingName;
+    }
 
     function updateData(value) {
         if (!value || !value.value) return;
 
-        console.log(value);
+        // console.log(value);
     }
 
     async function init() {
-        // fetch remote data
-        data = await fetchData(dataUrl);
-        console.log(data);
+        // fetch candidate data
+        candidateData = await fetchData(candidatesUrl);
+        console.log(candidateData);
+
+        // fetch vote result data
+        resultsData = await fetchData(resultsUrl);
+        // console.log(resultsData);
+
+        ridingName = getRiding(latlon, ridings);
+        ridingResults = getResults(ridingName, resultsData);
+        ridingCandidates = getCandidates(ridingName, candidateData);
+        console.log(ridingResults)
 
         // default display selector value
 		value = defaultSelectValue;
@@ -67,6 +110,12 @@
         placeholder="Pick a city..."
 		showChevron="true"
 		listOpen={false}
+    />
+
+    <RidingDetails 
+        riding={ridingName}
+        results={ridingResults}
+        candidates={ridingCandidates}
     />
     
 </main>
