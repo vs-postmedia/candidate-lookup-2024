@@ -3,7 +3,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import path from 'path';
 
 // PROJECT PATH
-const projectPath = '/svelte-template/';
+const projectPath = '/candidate-lookup-2024/';
 
 // https://vitejs.dev/config/
 export default defineConfig({

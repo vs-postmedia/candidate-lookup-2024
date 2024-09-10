@@ -1,8 +1,7 @@
 <script>
     // COMPONENTS
     import { onMount } from 'svelte';
-    import { csvParse } from 'd3-dsv';
-    import Chart from "$components/Chart.svelte";
+    import Papa from 'papaparse';
     import Select from "svelte-select"; // https://github.com/rob-balfre/svelte-select
 
     
@@ -10,7 +9,7 @@
     // DATA
     // import data from "$data/data.js";
     import { menuItems } from "$data/menu-items";
-    const dataUrl = 'https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/challenge/2024/challenge03/data.csv';
+    const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=0&single=true&output=csv';
 
     // VARIABLES
     let data, value;
@@ -20,9 +19,21 @@
     $: value, updateData(value);
 
     async function fetchData(url) {
-        const resp = await fetch(url);
-        data = await resp.text();
-        return csvParse(data);
+        return new Promise((resolve, reject) => {
+            Papa.parse(url, {
+                download: true,
+                header: true,
+                complete: results => {
+                    resolve(results.data);
+                },
+                error: (err, file) => {
+                    reject(err);
+                }
+            })
+        });
+        // const resp = await fetch(url);
+        // data = await resp.text();
+        // return csvParse(data);
     }
 
 
@@ -35,7 +46,7 @@
     async function init() {
         // fetch remote data
         data = await fetchData(dataUrl);
-        // console.log(data);
+        console.log(data);
 
         // default display selector value
 		value = defaultSelectValue;
@@ -58,10 +69,6 @@
 		listOpen={false}
     />
     
-    <Chart 
-        data={data}
-        value={value}
-    />
 </main>
 
 <footer>

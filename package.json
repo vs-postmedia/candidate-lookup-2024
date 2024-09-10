@@ -1,5 +1,5 @@
 {
-	"name": "svelte-template",
+	"name": "candidate-lookup-2024",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -22,6 +22,7 @@
 	"type": "module",
 	"dependencies": {
 		"d3-dsv": "^3.0.1",
+		"papaparse": "^5.4.1",
 		"svelte-select": "^5.7.0"
 	}
 }
