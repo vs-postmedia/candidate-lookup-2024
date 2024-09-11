@@ -4,10 +4,11 @@
     export let candidates;
 
     $: console.log(candidates)
+    $: isVisible = candidates.length > 0 ? 'block' : 'none';
 </script>
 
-<div id="container">
-    <p class="riding-title">Riding:</p>
+<div id="container" style="display:{isVisible}">
+    <p class="riding-title">Candidates for</p>
     <h2 class="riding-name">{riding}</h2>
 
     <div id="candidates-list">
@@ -16,13 +17,29 @@
                 <li>
                     <p class="name">{d.candidate}</p>
                     <p class="party">{d.party}</p>
-                    <p>Link to <a href={d.url} target="_blank">bio</a></p>
+                    <p><a href={d.url} target="_blank">View bio</a></p>
                 </li>
             {/each}
         </ul>
     </div>
 
-
+    <div id="results-list" style="display:{isVisible}">
+        <h3>2020 election results</h3>
+        <ul>
+            <li class="header">
+                <p>Candidate</p>
+                <p class="party">Party</p>
+                <p>Vote %</p>
+            </li>
+            {#each results as d}
+                <li>
+                    <p class="name">{d.candidate}</p>
+                    <p class="party">{d.party}</p>
+                    <p>{d.pct_votes}%</p>
+                </li>
+            {/each}
+        </ul>
+    </div>
 </div>
 
 
@@ -39,25 +56,47 @@
         font-size: 1.1rem;
         margin-bottom: 7px;
         text-align: center;
-        text-transform: uppercase;
     }
     #container .riding-name {
         font-size: 1.75rem;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    #candidates-list {
+        margin-bottom: 50px;
+    }
+    #results-list h3 {
+        color: var(--grey01);
+        font-family: BentonSansCond-BoldItalic;
+        font-size: 1.25rem;
         margin-bottom: 15px;
         text-align: center;
     }
-    #candidates-list li {
-        display: flex;
-        margin-bottom: 5px;
+    #results-list .header {
+        color: var(--grey05);
+        font-size: 0.8rem;
     }
+    #results-list .header p.party {
+        flex-grow: 1
+    }
+    #results-list li,
+    #candidates-list li {
+        border-bottom: 1px solid var(--grey05);
+        display: flex;
+        margin: 10px 0;
+        padding-bottom: 3px;
+    }
+    #results-list li > p,
     #candidates-list li > p {
-        flex-basis: 30%;
         padding: 0 5px;
     }
-    #candidates-list p.name {
-        font-family: BentonSansCond-Bold, bold;
+    #results-list .name,
+    #candidates-list .name {
+        flex-basis: 33%;
+        /* font-family: BentonSansCond-Bold, bold; */
     }
-    #candidates-list p.party {
-        flex-grow: 2;
+    #results-list .party,
+    #candidates-list .party {
+        flex-grow: 3;
     }
 </style>

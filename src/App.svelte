@@ -46,8 +46,9 @@
         return data.filter(d => d.electoral_district === ridingName);
     }
 
-    function getRidingName(ridingName, data) {
-        return data.filter(d => d.electoral_district === ridingName);
+    function getRidingResults(ridingName, data) {
+        return data.filter(d => d.electoral_district === ridingName)
+            .sort((a,b) => parseFloat(b.pct_votes) - parseFloat(a.pct_votes));
     }
 
     function getRiding(latlon, riding) {
@@ -74,7 +75,7 @@
         if (e.detail !== null) {
             const latlon = e.detail.center;
             ridingName = getRiding(latlon, ridings);
-            ridingResults = getRidingName(ridingName, resultsData);
+            ridingResults = getRidingResults(ridingName, resultsData);
             ridingCandidates = getCandidates(ridingName, candidateData);
         }
     }
@@ -131,7 +132,6 @@
     @import '$css/app.css';
 
     header {
-        border: 1px solid blue;
 		margin-bottom: 2rem;
 	}
 	header > h1 {
