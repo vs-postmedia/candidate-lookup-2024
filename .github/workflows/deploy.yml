@@ -25,7 +25,7 @@ jobs:
       - name: Build the project
         run: npm run build
         env:
-          VITE_API_KEY: ${{ secrets.VITE_MAPTILER_API_KEY }}
+          VITE_MAPTILER_API_KEY: ${{ secrets.VITE_MAPTILER_API_KEY }}
 
       # Deploy the build folder to GitHub Pages
       - name: Deploy to GitHub Pages
