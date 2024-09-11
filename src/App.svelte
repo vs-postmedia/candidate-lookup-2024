@@ -9,8 +9,9 @@
 
 
     // DATA
-    import mapTilerApiKey from '$data/api-key';
-    import { menuItems } from '$data/menu-items';
+    // import mapTilerApiKey from '$data/api-key';
+    const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
+    // import { menuItems } from '$data/menu-items';
     import ridings from '$data/riding-boundaries-2024.js';
     const candidatesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=0&single=true&output=csv';
     const resultsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=715680360&single=true&output=csv';
