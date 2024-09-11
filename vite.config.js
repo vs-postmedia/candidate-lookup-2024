@@ -7,8 +7,8 @@ const projectPath = '/candidate-lookup-2024/';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // base: '/svelte-template/',
-  base: process.env.MODE === 'production' ? projectPath : '/',
+  base: '/candidate-lookup-2024/',
+  // base: process.env.MODE === 'production' ? projectPath : '/',
   plugins: [svelte()],
   resolve: {
     alias: {
