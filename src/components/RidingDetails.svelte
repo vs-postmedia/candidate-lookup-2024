@@ -28,7 +28,7 @@
 
 <style>
     #container {
-        border: 1px solid red;
+        /* border: 1px solid red; */
         margin: 0 auto;
         max-width: 600px;
         padding: 2rem 0.25rem 1rem 0.25rem;
