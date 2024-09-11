@@ -11,7 +11,8 @@
     // DATA
     // import mapTilerApiKey from '$data/api-key';
     // import { menuItems } from '$data/menu-items';
-    import ridings from '$data/riding-boundaries-2024.js';
+    import ridings2024 from '$data/riding-boundaries-2024.js';
+    import ridings2020 from '$data/riding-boundaries-2020.js';
     const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
     const candidatesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=0&single=true&output=csv';
     const resultsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=715680360&single=true&output=csv';
@@ -52,7 +53,7 @@
             .sort((a,b) => parseFloat(b.pct_votes) - parseFloat(a.pct_votes));
     }
 
-    function getRiding(latlon, riding) {
+    function getRiding(latlon, ridings) {
         let ridingName;
         const point = turf.point(latlon);
 
@@ -77,9 +78,13 @@
         // console.log(e.detail)
         if (e.detail !== null) {
             const latlon = e.detail.center;
-            ridingName = getRiding(latlon, ridings);
+            const ridingName2024 = getRiding(latlon, ridings2024); // ridings2024
+            const ridingName2020 = getRiding(latlon, ridings2020); // ridings2020
+            // do riding names match? if not, use 2020 name for riding results
+            ridingName = ridingName2024 === ridingName2020 ? ridingName2024 : ridingName2020;
             ridingResults = getRidingResults(ridingName, resultsData);
-            ridingCandidates = getCandidates(ridingName, candidateData);
+            // candidates always uses 2024 riding info
+            ridingCandidates = getCandidates(ridingName2024, candidateData);
         }
     }
 
@@ -110,7 +115,7 @@
             country='ca'
             limit=10
             minLength=2
-            placeholder='Lookup a street or address...'
+            placeholder='Lookup an address...'
             on:pick={handleGeocodeResults}
             on:errr={handleGeoCodeError}
         />
