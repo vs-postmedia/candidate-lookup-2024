@@ -3,47 +3,57 @@
     export let results;
     export let candidates;
 
-    $: console.log(candidates)
+    $: console.log(results)
     $: isVisible = candidates.length > 0 ? 'block' : 'none';
 </script>
 
-<div id="container" style="display:{isVisible}">
-    <p class="riding-title">Candidates for</p>
-    <h2 class="riding-name">{riding}</h2>
+{#if candidates.length > 0}
+    <div id="container" style="display:{isVisible}">
+        <p class="riding-title">Candidates for</p>
+        <h2 class="riding-name">{riding}</h2>
 
-    <div id="candidates-list">
-        <ul>
-            {#each candidates as d}
-                <li>
-                    <p class="name">{d.candidate}</p>
-                    <p class="party">{d.party}</p>
-                    <p><a href={d.url} target="_blank">View bio</a></p>
-                </li>
-            {/each}
-        </ul>
-    </div>
+        <div id="candidates-list">
+            <ul>
+                {#each candidates as d}
+                    <li style="border-left: 8px solid {d.party_color}">
+                        <p class="name">{d.candidate}</p>
+                        <p class="party">{d.party}</p>
+                        <p><a href={d.url} target="_blank">View bio</a></p>
+                    </li>
+                {/each}
+            </ul>
+        </div>
 
-    <div id="results-list" style="display:{isVisible}">
-        <h3>2020 election results</h3>
-        <ul>
-            <li class="header">
-                <p>Candidate</p>
-                <p class="party">Party</p>
-                <p>Vote %</p>
-            </li>
-            {#each results as d}
-                <li>
-                    <p class="name">{d.candidate}</p>
-                    <p class="party">{d.party}</p>
-                    <p>{d.pct_votes}%</p>
+        <div id="results-list" style="display:{isVisible}">
+            <h3>2020 election results</h3>
+            <ul>
+                <li class="header">
+                    <p>Candidate</p>
+                    <p class="party">Party</p>
+                    <p>Vote %</p>
                 </li>
-            {/each}
-        </ul>
+                {#each results as d}
+                    <li class="{d.elected}" style="border-left: 8px solid {d.party_color}; background-color:{d.elected === 'Y' ? d.party_color : 'transparent'};">
+                        <p class="name">{d.candidate}</p>
+                        <p class="party">{d.party}</p>
+                        <p>{d.pct_votes}%</p>
+                    </li>
+                {/each}
+            </ul>
+        </div>
     </div>
-</div>
+{:else} 
+    <p id="no-data">Placeholder text</p>
+{/if}
 
 
 <style>
+    #no-data {
+        font-size: 2rem;
+        margin: 0 auto;
+        padding: 50px 0;
+        text-align: center;
+    }
     #container {
         /* border: 1px solid red; */
         margin: 0 auto;
@@ -65,6 +75,10 @@
     #candidates-list {
         margin-bottom: 50px;
     }
+    #candidates-list a {
+        color: var(--blue01);
+        font-family: BentonSansCond-RegItalic, italic;
+    }
     #results-list h3 {
         color: var(--grey01);
         font-family: BentonSansCond-BoldItalic;
@@ -83,8 +97,7 @@
     #candidates-list li {
         border-bottom: 1px solid var(--grey05);
         display: flex;
-        margin: 10px 0;
-        padding-bottom: 3px;
+        padding: 8px 0;
     }
     #results-list li > p,
     #candidates-list li > p {
@@ -94,6 +107,10 @@
     #candidates-list .name {
         flex-basis: 33%;
         /* font-family: BentonSansCond-Bold, bold; */
+    }
+    #results-list li.Y p {
+        color: #FFF;
+        font-family: BentonSansCond-Bold, bold;
     }
     #results-list .party,
     #candidates-list .party {

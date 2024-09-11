@@ -43,24 +43,23 @@
     }
 
     function getCandidates(ridingName, data) {
-        return data.filter(d => d.electoral_district === ridingName);
+        return data.filter(d => d.electoral_district === ridingName)
+            .sort((a,b) => a.candidate.split(' ')[1].localeCompare(b.candidate.split(' ')[1]));
     }
 
     function getRidingResults(ridingName, data) {
-        return data.filter(d => d.electoral_district === ridingName)
+        return data.filter(d => d.ed_name === ridingName)
             .sort((a,b) => parseFloat(b.pct_votes) - parseFloat(a.pct_votes));
     }
 
     function getRiding(latlon, riding) {
         let ridingName;
         const point = turf.point(latlon);
-        // const point = turf.point([e.lngLat.lng, e.lngLat.lat]);
 
         // find out which riding the point is inside
 	    ridings.features.forEach(d => {
 		    // find which polygon the point is within
 		    const withinPoly = PointsWithinPolygon(point, d);
-		    // if so, let's cache the buffer
 		    if (withinPoly.features.length > 0) {
                 ridingName = d.properties.ED_NAME;
                 return;
@@ -68,6 +67,10 @@
 	    });
 
         return ridingName;
+    }
+
+    function handleGeoCodeError(e) {
+        console.log(e)
     }
 
     function handleGeocodeResults(e) {
@@ -109,6 +112,7 @@
             minLength=2
             placeholder='Lookup a street or address...'
             on:pick={handleGeocodeResults}
+            on:errr={handleGeoCodeError}
         />
     </div>
 
@@ -122,7 +126,7 @@
 
 <footer>
     <p class="note">NOTE: tk.</p>
-    <p class="source">Source:  <a href="https:vancouversun.com" target="_blank">TK</a></p>
+    <p class="source">Source:  <a href="https://elections.bc.ca/2024-provincial-election/candidate-list/" target="_blank">Elections B.C.</a>, Political parties</p>
 </footer>
   
 <style>
