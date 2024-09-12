@@ -104,7 +104,7 @@
 
 <main>
     <div class="geocoding">
-        <span class="arrows-left">➡️</span>
+        <span class="voting-emoji">🗳️</span>
         <GeocodingControl 
             apiKey={mapTilerApiKey}
             bbox={bcBbox}
@@ -115,7 +115,7 @@
             on:pick={handleGeocodeResults}
             on:error={handleGeoCodeError}
         />
-        <span class="arrows-right">⬅️</span>
+        <span class="voting-emoji">🗳️</span>
     </div>
 
     <RidingDetails 
@@ -153,13 +153,9 @@
         justify-content: center;
         margin: 0 auto;
     }
-    .geocoding .arrows-left {
-        padding-right: 5px;
-        padding-top: 9px;
-    }
-    .geocoding .arrows-right {
-        padding-left: 5px;
-        padding-top: 9px;
+    .geocoding .voting-emoji {
+        font-size: 2rem;
+        padding: 4px 8px 0 8px;
     }
   	:global(input:focus) {
 		outline: none;
