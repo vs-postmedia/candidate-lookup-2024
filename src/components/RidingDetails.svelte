@@ -46,7 +46,7 @@
 {:else}
     <div id="no-data">
         <p>To find the candidates running in your riding this fall, enter an address in the search box above and <bold>select the closest option from the menu that appears.</bold></p>
-        <p>Make sure to include a street number if you live in a densely populated area, like Vancouver. For rural or remote areas, a street or town name is often enough.</p>
+        <p>Make sure to include a street number if you live in a densely populated area like Vancouver. For rural or remote areas, a street or town name is often enough.</p>
     </div>
 {/if}
 
