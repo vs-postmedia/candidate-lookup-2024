@@ -150,7 +150,7 @@
 	} */
     .geocoding {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
         margin: 0 auto;
     }
     .geocoding .arrows-left {
