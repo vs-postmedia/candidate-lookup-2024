@@ -3,6 +3,7 @@
     export let results;
     export let candidates;
 
+    $: console.log(candidates)
     $: console.log(results)
     $: isVisible = candidates.length > 0 ? 'block' : 'none';
 </script>
@@ -42,17 +43,25 @@
             </ul>
         </div>
     </div>
-{:else} 
-    <p id="no-data">Placeholder text</p>
+{:else}
+    <div id="no-data">
+        <p>To find the candidates running in your riding this fall, enter an address or location in the search box above and <bold>select the closest option from the menu that appears.</bold></p>
+        <p>Make sure to include a street number if you live in a densely populated area, like Vancouver. For rural or remote areas, a city or town name is often enough.</p>
+    </div>
 {/if}
 
 
 <style>
     #no-data {
-        font-size: 2rem;
-        margin: 0 auto;
+        margin: 0 3vw;
         padding: 50px 0;
-        text-align: center;
+    }
+    #no-data p {
+        font-size: 1rem;
+        padding: 5px 0;
+    }
+    #no-data p > bold {
+        font-family: BentonSansCond-Bold;
     }
     #container {
         /* border: 1px solid red; */
@@ -110,7 +119,7 @@
     }
     #results-list li.Y p {
         color: #FFF;
-        font-family: BentonSansCond-Bold, bold;
+        font-family: BentSansCond-Bold, bold;
     }
     #results-list .party,
     #candidates-list .party {

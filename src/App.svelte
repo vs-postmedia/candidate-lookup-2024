@@ -9,8 +9,6 @@
 
 
     // DATA
-    // import mapTilerApiKey from '$data/api-key';
-    // import { menuItems } from '$data/menu-items';
     import ridings2024 from '$data/riding-boundaries-2024.js';
     import ridings2020 from '$data/riding-boundaries-2020.js';
     const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
@@ -21,7 +19,6 @@
     // VARIABLES
     let candidateData, resultsData;
     const bcBbox = [-139.595032,48.302552,-113.887024,60.199227];
-    // let latlon = [-123.19361394392898, 49.400479859367884];
 
     // REACTIVE VARIABLES
     $: ridingName = '';
@@ -75,11 +72,12 @@
     }
 
     function handleGeocodeResults(e) {
-        // console.log(e.detail)
+        console.log(e.detail)
         if (e.detail !== null) {
             const latlon = e.detail.center;
             const ridingName2024 = getRiding(latlon, ridings2024); // ridings2024
             const ridingName2020 = getRiding(latlon, ridings2020); // ridings2020
+
             // do riding names match? if not, use 2020 name for riding results
             ridingName = ridingName2024 === ridingName2020 ? ridingName2024 : ridingName2020;
             ridingResults = getRidingResults(ridingName, resultsData);
@@ -92,11 +90,9 @@
     async function init() {
         // fetch candidate data
         candidateData = await fetchData(candidatesUrl);
-        // console.log(candidateData);
 
         // fetch vote result data
         resultsData = await fetchData(resultsUrl);
-        // console.log(resultsData);
     }
 
     onMount(init);
@@ -104,21 +100,23 @@
 
 <header>
     <h1>Who’s running in my riding?</h1>
-    <p class="subhead">Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+    <!-- <p class="subhead">Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p> -->
 </header>
 
 <main>
     <div class="geocoding">
+        <span class="arrows-left">➡️ ➡️</span>
         <GeocodingControl 
             apiKey={mapTilerApiKey}
             bbox={bcBbox}
             country='ca'
             limit=10
             minLength=2
-            placeholder='Lookup an address...'
+            placeholder='Lookup an address or location...'
             on:pick={handleGeocodeResults}
-            on:errr={handleGeoCodeError}
+            on:error={handleGeoCodeError}
         />
+        <span class="arrows-right">⬅️ ⬅️</span>
     </div>
 
     <RidingDetails 
@@ -130,7 +128,7 @@
 </main>
 
 <footer>
-    <p class="note">NOTE: tk.</p>
+    <p class="note">NOTE: Parties have until Sept. 28 to register candidates for the election. They are not required to run candidates in every riding.</p>
     <p class="source">Source:  <a href="https://elections.bc.ca/2024-provincial-election/candidate-list/" target="_blank">Elections B.C.</a>, Political parties</p>
 </footer>
   
@@ -152,19 +150,18 @@
 		text-align: center;
 	}
     .geocoding {
-        display: block;
+        display: flex;
+        justify-content: space-around;
         margin: 0 auto;
-        width: 250px;
-        /* position: absolute;
-        top: 10px;
-        left: 10px; */
     }
-
-    /* COMBOBOX SELECTOR */
-  	:global(.svelte-select) {
-		margin: 1rem auto !important;
-		max-width: 250px;
-  	}
+    .geocoding .arrows-left {
+        padding-right: 5px;
+        padding-top: 9px;
+    }
+    .geocoding .arrows-right {
+        padding-left: 5px;
+        padding-top: 9px;
+    }
   	:global(input:focus) {
 		outline: none;
   	}
