@@ -7,7 +7,6 @@
     import RidingDetails from '$components/RidingDetails.svelte';
     import GeocodingControl from "@maptiler/geocoding-control/svelte/GeocodingControl.svelte";
 
-
     // DATA
     import ridings2024 from '$data/riding-boundaries-2024.js';
     import ridings2020 from '$data/riding-boundaries-2020.js';
@@ -144,11 +143,11 @@
 	header > h1 {
 		text-align: center;
 	}
-	header .subhead {
+	/* header .subhead {
 		margin: 0 auto;
 		max-width: 525px;
 		text-align: center;
-	}
+	} */
     .geocoding {
         display: flex;
         justify-content: space-around;
