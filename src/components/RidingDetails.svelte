@@ -99,8 +99,9 @@
         color: var(--grey05);
         font-size: 0.8rem;
     }
+    #results-list .header p.name,
     #results-list .header p.party {
-        flex-grow: 1
+        flex-grow: 2
     }
     #results-list li,
     #candidates-list li {
@@ -119,7 +120,7 @@
     }
     #results-list li.Y p {
         color: #FFF;
-        font-family: BentSansCond-Bold, bold;
+        font-family: BentonSansCond-Bold, bold;
     }
     #results-list .party,
     #candidates-list .party {
