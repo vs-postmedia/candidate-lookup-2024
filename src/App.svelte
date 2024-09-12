@@ -104,7 +104,7 @@
 
 <main>
     <div class="geocoding">
-        <span class="arrows-left">➡️ ➡️</span>
+        <span class="arrows-left">➡️</span>
         <GeocodingControl 
             apiKey={mapTilerApiKey}
             bbox={bcBbox}
@@ -115,7 +115,7 @@
             on:pick={handleGeocodeResults}
             on:error={handleGeoCodeError}
         />
-        <span class="arrows-right">⬅️ ⬅️</span>
+        <span class="arrows-right">⬅️</span>
     </div>
 
     <RidingDetails 
