@@ -61,6 +61,7 @@
         padding: 5px 0;
     }
     #no-data p > bold {
+        color: #0062A3;
         font-family: BentonSansCond-Bold;
     }
     #container {
