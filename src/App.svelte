@@ -72,13 +72,11 @@
     }
 
     function handleGeocodeResults(e) {
-        console.log(e.detail)
+        // console.log(e.detail)
         if (e.detail !== null) {
             const latlon = e.detail.center;
             riding2024 = getRiding(latlon, ridings2024); // ridings2024
             riding2020 = getRiding(latlon, ridings2020); // ridings2020
-
-            console.log(riding2020, riding2024)
 
             // do riding names match? if not, use 2020 name for riding results
             // ridingName = ridingName2024 === ridingName2020 ? ridingName2024 : ridingName2020;
@@ -127,6 +125,7 @@
 
     <RidingDetails 
         riding={riding2024}
+        riding2020={riding2020}
         results={ridingResults}
         candidates={ridingCandidates}
     />

@@ -2,9 +2,10 @@
     export let riding;
     export let results;
     export let candidates;
+    export let riding2020;
 
-    $: console.log(candidates)
-    $: console.log(results)
+    // $: console.log(candidates)
+    // $: console.log(results)
     $: isVisible = candidates.length > 0 ? 'block' : 'none';
 </script>
 
@@ -12,6 +13,9 @@
     <div id="container" style="display:{isVisible}">
         <p class="riding-title">Candidates for</p>
         <h2 class="riding-name">{riding}</h2>
+        {#if riding2020 !== riding}
+            <p class="prev-riding">previously {riding2020}</p>
+        {/if}
 
         <div id="candidates-list">
             <ul>
@@ -51,8 +55,8 @@
     </div>
 {:else}
     <div id="no-data">
-        <p>To find the candidates running in your riding this fall, enter an address in the search box above and <bold>select the closest option from the menu that appears.</bold></p>
-        <p>If you live in a densely populated area like Vancouver, try to include a street number along with a street name. For rural or remote areas, a street or town name is often enough.</p>
+        <p>To find the candidates running in your riding this fall, enter an street name or location in the search box above and <bold>select the closest option from the menu that appears.</bold></p>
+        <p>If you live in a densely populated area like Vancouver, you may need to include a street number or postal code. For rural or remote areas, a street or town name is often enough.</p>
     </div>
 {/if}
 
@@ -85,6 +89,13 @@
     #container .riding-name {
         font-size: 1.75rem;
         margin-bottom: 20px;
+        text-align: center;
+    }
+    #container .prev-riding {
+        color: var(--grey03);
+        font-family: BentonSansCond-RegItalic;
+        font-size: 0.8rem;
+        margin: -20px 0 10px 0;
         text-align: center;
     }
     #candidates-list {
