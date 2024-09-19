@@ -29,15 +29,21 @@
             <h3>2020 election results</h3>
             <ul>
                 <li class="header">
-                    <p>Candidate</p>
+                    <p class="name">Candidate</p>
                     <p class="party">Party</p>
-                    <p>Vote %</p>
+                    <p style="flex-grow:2;">Vote %</p>
+                    <p></p>
                 </li>
                 {#each results as d}
-                    <li class="{d.elected}" style="border-left: 8px solid {d.party_color}; background-color:{d.elected === 'Y' ? d.party_color : 'transparent'};">
-                        <p class="name">{d.candidate}</p>
+                    <li class="{d.elected}" style="border-left: 8px solid {d.party_color}">
+                        <p class="name" style="background-color:{d.elected === 'Y' ? d.party_color : 'transparent'}; padding: 8px 4px;">{d.candidate}</p>
                         <p class="party">{d.party}</p>
-                        <p>{d.pct_votes}%</p>
+                        <p class="vote-pct">{d.pct_votes}%</p>
+                        <p class="bar">
+                            <span class="color-bar" style="background:{d.party_color}; width:{d.pct_votes}%;">
+                                <!-- <span style="background:{d.party_color}; width:{d.pct_votes}"></span> -->
+                            </span>
+                        </p>
                     </li>
                 {/each}
             </ul>
@@ -65,7 +71,6 @@
         font-family: BentonSansCond-Bold;
     }
     #container {
-        /* border: 1px solid red; */
         margin: 0 auto;
         max-width: 600px;
         padding: 2rem 0.25rem 1rem 0.25rem;
@@ -108,23 +113,35 @@
     #candidates-list li {
         border-bottom: 1px solid var(--grey05);
         display: flex;
-        padding: 8px 0;
+        /* padding: 8px 0; */
     }
     #results-list li > p,
     #candidates-list li > p {
-        padding: 0 5px;
+        padding: 8px 4px;
     }
     #results-list .name,
     #candidates-list .name {
         flex-basis: 33%;
         /* font-family: BentonSansCond-Bold, bold; */
     }
-    #results-list li.Y p {
+    #results-list li.Y .name {
         color: #FFF;
         font-family: BentonSansCond-Bold, bold;
     }
     #results-list .party,
     #candidates-list .party {
         flex-grow: 3;
+        padding: 8px 4px;
+    }
+    #results-list .vote-pct {
+        padding: 8px 4px;
+    }
+    #results-list .bar {
+        padding: 10px 4px;
+        width: 50px;
+    }
+    #results-list .color-bar {
+        display: block;
+        height: 15px;
     }
 </style>

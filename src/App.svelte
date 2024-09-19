@@ -110,8 +110,12 @@
             bbox={bcBbox}
             country='ca'
             limit=10
-            minLength=2
+            minLength=4
             placeholder='Lookup an address or location...'
+            proximity={[
+                { type: "client-geolocation" },
+                { type: "server-geolocation" }
+            ]}
             on:pick={handleGeocodeResults}
             on:error={handleGeoCodeError}
         />
