@@ -105,7 +105,7 @@
         color: var(--grey05);
         font-size: 0.8rem;
     }
-    #results-list .header p.name,
+    /* #results-list .header p.name, */
     #results-list .header p.party {
         flex-grow: 2
     }

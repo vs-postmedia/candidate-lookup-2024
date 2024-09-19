@@ -20,8 +20,9 @@
     const bcBbox = [-139.595032,48.302552,-113.887024,60.199227];
 
     // REACTIVE VARIABLES
-    $: ridingName = '';
     $: ridingResults = [];
+    $: riding2020 = '';
+    $: riding2024 = '';
     $: ridingCandidates = [];
 
     async function fetchData(url) {
@@ -74,14 +75,16 @@
         console.log(e.detail)
         if (e.detail !== null) {
             const latlon = e.detail.center;
-            const ridingName2024 = getRiding(latlon, ridings2024); // ridings2024
-            const ridingName2020 = getRiding(latlon, ridings2020); // ridings2020
+            riding2024 = getRiding(latlon, ridings2024); // ridings2024
+            riding2020 = getRiding(latlon, ridings2020); // ridings2020
+
+            console.log(riding2020, riding2024)
 
             // do riding names match? if not, use 2020 name for riding results
-            ridingName = ridingName2024 === ridingName2020 ? ridingName2024 : ridingName2020;
-            ridingResults = getRidingResults(ridingName, resultsData);
+            // ridingName = ridingName2024 === ridingName2020 ? ridingName2024 : ridingName2020;
+            ridingResults = getRidingResults(riding2020, resultsData);
             // candidates always uses 2024 riding info
-            ridingCandidates = getCandidates(ridingName2024, candidateData);
+            ridingCandidates = getCandidates(riding2024, candidateData);
         }
     }
 
@@ -110,7 +113,7 @@
             bbox={bcBbox}
             country='ca'
             limit=10
-            minLength=4
+            minLength=2
             placeholder='Lookup an address or location...'
             proximity={[
                 { type: "client-geolocation" },
@@ -123,7 +126,7 @@
     </div>
 
     <RidingDetails 
-        riding={ridingName}
+        riding={riding2024}
         results={ridingResults}
         candidates={ridingCandidates}
     />
