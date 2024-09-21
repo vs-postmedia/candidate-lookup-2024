@@ -14,6 +14,7 @@
     const geApiKey = import.meta.env.VITE_GE_API_KEY;
     const candidatesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=0&single=true&output=csv';
     const resultsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=715680360&single=true&output=csv';
+    const geScriptUrl = 'https://cdn.jsdelivr.net/npm/@geocodeearth/autocomplete-element/dist/bundle.js';
 
 
     // VARIABLES
@@ -25,6 +26,13 @@
     $: riding2020 = '';
     $: riding2024 = '';
     $: ridingCandidates = [];
+
+    function addGeocodeEarthScript(url) {
+        const script = document.createElement('script');
+        script.src = url;
+        script.type = 'module';
+        document.body.appendChild(script)
+    }
 
     async function fetchData(url) {
         return new Promise((resolve, reject) => {
@@ -97,6 +105,8 @@
     }
 
     async function init() {
+        addGeocodeEarthScript(geScriptUrl);
+
         // fetch candidate data
         candidateData = await fetchData(candidatesUrl);
 
@@ -104,7 +114,7 @@
         resultsData = await fetchData(resultsUrl);
 
         // event handling for GeocodeEarth autocomplete element
-        handleGeocodeEarthEvents()
+        handleGeocodeEarthEvents();
     }
 
     onMount(init);
