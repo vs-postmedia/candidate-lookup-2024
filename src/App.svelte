@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import Papa from 'papaparse';
     import * as turf from '@turf/helpers';
+    import '@geocodeearth/autocomplete-element';
     import PointsWithinPolygon from '@turf/points-within-polygon';
     import RidingDetails from '$components/RidingDetails.svelte';
     import GeocodingControl from "@maptiler/geocoding-control/svelte/GeocodingControl.svelte";
@@ -11,6 +12,7 @@
     import ridings2024 from '$data/riding-boundaries-2024.js';
     import ridings2020 from '$data/riding-boundaries-2020.js';
     const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
+    const geApiKey = import.meta.env.VITE_GE_API_KEY;
     const candidatesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=0&single=true&output=csv';
     const resultsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=715680360&single=true&output=csv';
 
@@ -68,24 +70,32 @@
     }
 
     function handleGeoCodeError(e) {
-        console.log(e)
+        console.log(e);
     }
 
     function handleGeocodeResults(e) {
-        // console.log(e.detail)
+        console.log(e.detail)
         if (e.detail !== null) {
-            const latlon = e.detail.center;
+            // const latlon = e.detail.center; // maptiler
+            const latlon = e.detail.geometry.coordinates; // geocode earth
             riding2024 = getRiding(latlon, ridings2024); // ridings2024
             riding2020 = getRiding(latlon, ridings2020); // ridings2020
 
-            // do riding names match? if not, use 2020 name for riding results
-            // ridingName = ridingName2024 === ridingName2020 ? ridingName2024 : ridingName2020;
             ridingResults = getRidingResults(riding2020, resultsData);
             // candidates always uses 2024 riding info
             ridingCandidates = getCandidates(riding2024, candidateData);
         }
     }
 
+    function handleGeocodeEarthEvents() {
+        const el = document.querySelector('ge-autocomplete');
+
+        el.addEventListener('select', handleGeocodeResults);
+
+        el.addEventListener('error', e => {
+            console.log(e.detail, e)
+        });
+    }
 
     async function init() {
         // fetch candidate data
@@ -93,23 +103,39 @@
 
         // fetch vote result data
         resultsData = await fetchData(resultsUrl);
+
+        // event handling for GeocodeEarth autocomplete element
+        handleGeocodeEarthEvents()
     }
 
     onMount(init);
+
+    function filterResults(e) {
+        console.log(e)
+        return !e.place_name_en.includes('Alberta');
+    }
 </script>
 
 <header>
     <h1>Who’s running in my riding?</h1>
-    <!-- <p class="subhead">Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p> -->
 </header>
 
 <main>
+    
     <div class="geocoding">
         <span class="voting-emoji">🗳️</span>
-        <GeocodingControl 
+        <ge-autocomplete
+            api_key={geApiKey}
+            boundary.country='CA'
+            boundary.gid='whosonfirst:region:85682117'
+            placeholder='Enter an address or city'
+        ></ge-autocomplete>
+
+        <!-- <GeocodingControl 
             apiKey={mapTilerApiKey}
             bbox={bcBbox}
             country='ca'
+            filter={filterResults}
             limit=10
             minLength=2
             placeholder='Lookup an address or location...'
@@ -119,7 +145,7 @@
             ]}
             on:pick={handleGeocodeResults}
             on:error={handleGeoCodeError}
-        />
+        /> -->
         <span class="voting-emoji">🗳️</span>
     </div>
 
