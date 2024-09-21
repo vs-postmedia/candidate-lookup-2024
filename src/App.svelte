@@ -3,7 +3,6 @@
     import { onMount } from 'svelte';
     import Papa from 'papaparse';
     import * as turf from '@turf/helpers';
-    import '@geocodeearth/autocomplete-element';
     import PointsWithinPolygon from '@turf/points-within-polygon';
     import RidingDetails from '$components/RidingDetails.svelte';
     import GeocodingControl from "@maptiler/geocoding-control/svelte/GeocodingControl.svelte";
