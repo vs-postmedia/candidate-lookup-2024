@@ -5,7 +5,7 @@
     export let riding2020;
 
     // $: console.log(candidates)
-    // $: console.log(results)
+    $: console.log(riding, riding2020)
     $: isVisible = candidates.length > 0 ? 'block' : 'none';
 </script>
 
