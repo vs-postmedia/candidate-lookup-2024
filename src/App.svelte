@@ -27,7 +27,7 @@
     $: riding2024 = '';
     $: ridingCandidates = [];
 
-    function addGeocodeEarthScript(url) {
+    async function addGeocodeEarthScript(url) {
         const script = document.createElement('script');
         script.src = url;
         script.type = 'module';
@@ -105,7 +105,7 @@
     }
 
     async function init() {
-        addGeocodeEarthScript(geScriptUrl);
+        await addGeocodeEarthScript(geScriptUrl);
 
         // fetch candidate data
         candidateData = await fetchData(candidatesUrl);
