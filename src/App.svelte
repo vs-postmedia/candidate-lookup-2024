@@ -27,11 +27,23 @@
     $: riding2024 = '';
     $: ridingCandidates = [];
 
+    // async function addGeocodeEarthScript(url) {
+    //     const script = document.createElement('script');
+    //     script.src = url;
+    //     script.type = 'module';
+    //     document.body.appendChild(script)
+    // }
+    addGeocodeEarthScript(geScriptUrl);
+
     async function addGeocodeEarthScript(url) {
-        const script = document.createElement('script');
-        script.src = url;
-        script.type = 'module';
-        document.body.appendChild(script)
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = url;
+            script.type = 'module';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script)
+        })
     }
 
     async function fetchData(url) {
@@ -105,8 +117,7 @@
     }
 
     async function init() {
-        await addGeocodeEarthScript(geScriptUrl);
-
+        
         // fetch candidate data
         candidateData = await fetchData(candidatesUrl);
 
