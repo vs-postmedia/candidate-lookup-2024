@@ -53,8 +53,8 @@
     </div>
 {:else}
     <div id="no-data">
-        <p>To find the candidates running in your riding this fall, enter an street name or location in the search box above and <bold>select the closest option from the menu that appears.</bold></p>
-        <p>If you live in a densely populated area like Vancouver, you may need to include a street number or postal code. For rural or remote areas, a street or town name is often enough.</p>
+        <p>To find the candidates running in your riding this fall, enter a street name, postal code or location in the search box above and <bold>select an option from the menu that appears.</bold></p>
+        <p>If you live in a densely populated area like Metro Vancouver, you may need to include a street number. For rural or remote areas, a street or town name is often enough.</p>
     </div>
 {/if}
 
