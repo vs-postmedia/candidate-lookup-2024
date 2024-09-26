@@ -4,8 +4,6 @@
     export let candidates;
     export let riding2020;
 
-    // $: console.log(candidates)
-    $: console.log(riding, riding2020)
     $: isVisible = candidates.length > 0 ? 'block' : 'none';
 </script>
 
@@ -116,7 +114,6 @@
         color: var(--grey05);
         font-size: 0.8rem;
     }
-    /* #results-list .header p.name, */
     #results-list .header p.party {
         flex-grow: 2
     }
@@ -133,7 +130,6 @@
     #results-list .name,
     #candidates-list .name {
         flex-basis: 33%;
-        /* font-family: BentonSansCond-Bold, bold; */
     }
     #results-list li.Y .name {
         color: #FFF;
