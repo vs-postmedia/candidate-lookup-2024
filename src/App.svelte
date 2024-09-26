@@ -145,8 +145,8 @@
     async function init() {
 
 
-        test(testUrl)
-        await addGeocodeEarthScript(geScriptUrl);
+        // test(testUrl)
+        // await addGeocodeEarthScript(geScriptUrl);
 
 
         // fetch candidate data
