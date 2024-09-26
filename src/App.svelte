@@ -2,34 +2,25 @@
     // COMPONENTS
     import Papa from 'papaparse';
     import { onMount } from 'svelte';
-    // import '$lib/autocomplete-element';
     import * as turf from '@turf/helpers';
-    // import { Geocoder, controls } from '@beyonk/svelte-mapbox';
-    import PointsWithinPolygon from '@turf/points-within-polygon';
-    import RidingDetails from '$components/RidingDetails.svelte';
     import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
     import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-    // import Autocomplete from '$components/Autocomplete.svelte';
-    // import GeocodingControl from "@maptiler/geocoding-control/svelte/GeocodingControl.svelte";
+    import PointsWithinPolygon from '@turf/points-within-polygon';
+    import RidingDetails from '$components/RidingDetails.svelte';
 
     // DATA
     import ridings2024 from '$data/riding-boundaries-2024.js';
     import ridings2020 from '$data/riding-boundaries-2020.js';
     // const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
     const mapboxToken = 'pk.eyJ1IjoibmpncmlmZml0aHMiLCJhIjoiY20xam53NTY2MDBmbjJrcHluNGlyOWdubCJ9.n9aEqRoFc8E82Ifn_MBGkw';
-    const geApiKey = import.meta.env.VITE_GE_API_KEY;
-    // const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
     const candidatesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=0&single=true&output=csv';
     const resultsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=715680360&single=true&output=csv';
-    const geScriptUrl = 'https://cdn.jsdelivr.net/npm/@geocodeearth/autocomplete-element/dist/bundle.js';
-    const testUrl = `https://api.geocode.earth/v1/autocomplete?api_key=${geApiKey}&text=vancouver`
 
 
     // VARIABLES
     const geocodeEl = '#geocoder';
     let candidateData, resultsData, geocoder;
     const bcBbox = [-139.595032,48.302552,-113.887024,60.199227];
-    // const { GeolocateControl } = controls;
 
     // REACTIVE VARIABLES
     $: ridingResults = [];
@@ -38,26 +29,7 @@
     $: ridingCandidates = [];
 
 
-
-
-    function test(url) {
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                console.log(data.features)
-            })
-            .catch(error => {
-                console.error('Error fetching autocomplete results:', error);
-            });
-
-    }
-
+    // /FUNCTIONS
     function addGeocoder(geocodeEl) {
         geocoder = new MapboxGeocoder({
             accessToken: mapboxToken,
@@ -72,23 +44,9 @@
                 });
             }
         });
-
-        console.log(geocodeEl)
-        console.log(geocoder)
-
         geocoder.addTo(geocodeEl);
         geocoder.on('result', handleGeocodeResults);
-    }
-
-    async function addGeocodeEarthScript(url) {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = url;
-            script.type = 'module';
-            script.onload = resolve;
-            script.onerror = reject;
-            document.body.appendChild(script)
-        })
+        geocoder.on('error', handleGeocodeError);
     }
 
     async function fetchData(url) {
@@ -138,11 +96,9 @@
     }
 
     function handleGeocodeResults(e) {
-        console.log(e)
+        // console.log(e)
         if (e.detail !== null) {
             const latlon = e.result.center;
-            // const latlon = e.detail.center; // maptiler
-            // const latlon = e.detail.geometry.coordinates; // geocode earth
             riding2024 = getRiding(latlon, ridings2024); // ridings2024
             riding2020 = getRiding(latlon, ridings2020); // ridings2020
 
@@ -163,33 +119,17 @@
     }
 
     async function init() {
+        // create the geocode element
         addGeocoder(geocodeEl);
-
-        // test(testUrl)
-        // await addGeocodeEarthScript(geScriptUrl);
-
 
         // fetch candidate data
         candidateData = await fetchData(candidatesUrl);
 
         // fetch vote result data
         resultsData = await fetchData(resultsUrl);
-
-        // event handling for GeocodeEarth autocomplete element
-        // handleGeocodeEarthEvents();
     }
 
     onMount(init);
-
-    function filterResults(e) {
-        console.log(e)
-        const results = e.detail.features.filter(d => {
-            d.place_name.includes('British Columbia');
-        });
-        return results;
-    }
-
-    console.log(mapboxToken)
 </script>
 
 <header>
@@ -201,37 +141,6 @@
     <div class="geocoding">
         <span class="voting-emoji">🗳️</span>
         <div id="geocoder"></div>
-
-        <!-- <Geocoder 
-            accessToken={mapboxToken}
-            countries="CA"
-            on:error={handleGeocodeError}
-            on:result={handleGeocodeResults}
-            on:results={filterResults}
-        /> -->
-
-        <!-- <ge-autocomplete
-            api_key={geApiKey}
-            boundary.country='CA'
-            boundary.gid='whosonfirst:region:85682117'
-            placeholder='Enter an address or city'
-        ></ge-autocomplete> -->
-
-        <!-- <GeocodingControl 
-            apiKey={mapTilerApiKey}
-            bbox={bcBbox}
-            country='ca'
-            filter={filterResults}
-            limit=10
-            minLength=2
-            placeholder='Lookup an address or location...'
-            proximity={[
-                { type: "client-geolocation" },
-                { type: "server-geolocation" }
-            ]}
-            on:pick={handleGeocodeResults}
-            on:error={handleGeoCodeError}
-        /> -->
         <span class="voting-emoji">🗳️</span>
     </div>
 
@@ -261,14 +170,9 @@
 	header > h1 {
 		text-align: center;
 	}
-	/* header .subhead {
-		margin: 0 auto;
-		max-width: 525px;
-		text-align: center;
-	} */
     #geocoder {
         z-index: 1;
-        margin: 20px;
+        margin: 0 10px;
     }
     .mapboxgl-ctrl-geocoder {
         min-width: 100%;
