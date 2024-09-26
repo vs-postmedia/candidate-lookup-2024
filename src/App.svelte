@@ -4,9 +4,11 @@
     import { onMount } from 'svelte';
     // import '$lib/autocomplete-element';
     import * as turf from '@turf/helpers';
-    import { Geocoder, controls } from '@beyonk/svelte-mapbox';
+    // import { Geocoder, controls } from '@beyonk/svelte-mapbox';
     import PointsWithinPolygon from '@turf/points-within-polygon';
     import RidingDetails from '$components/RidingDetails.svelte';
+    import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+    import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
     // import Autocomplete from '$components/Autocomplete.svelte';
     // import GeocodingControl from "@maptiler/geocoding-control/svelte/GeocodingControl.svelte";
 
@@ -24,15 +26,19 @@
 
 
     // VARIABLES
-    let candidateData, resultsData;
+    const geocodeEl = '#geocoder';
+    let candidateData, resultsData, geocoder;
     const bcBbox = [-139.595032,48.302552,-113.887024,60.199227];
-    const { GeolocateControl } = controls;
+    // const { GeolocateControl } = controls;
 
     // REACTIVE VARIABLES
     $: ridingResults = [];
     $: riding2020 = '';
     $: riding2024 = '';
     $: ridingCandidates = [];
+
+
+
 
     function test(url) {
         fetch(url)
@@ -52,13 +58,28 @@
 
     }
 
+    function addGeocoder(geocodeEl) {
+        geocoder = new MapboxGeocoder({
+            accessToken: mapboxToken,
+            countries: 'ca',
+            bbox: bcBbox,
+            filter: d => {
+                return d.context.some(i => {
+                     // ID is in the form {index}.{id} per https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+                     return (
+                        i.id.split('.').shift() === 'region' && i.text === 'British Columbia'
+                     );
+                });
+            }
+        });
 
-    // async function addGeocodeEarthScript(url) {
-    //     const script = document.createElement('script');
-    //     script.src = url;
-    //     script.type = 'module';
-    //     document.body.appendChild(script)
-    // }
+        console.log(geocodeEl)
+        console.log(geocoder)
+
+        geocoder.addTo(geocodeEl);
+        geocoder.on('result', handleGeocodeResults);
+    }
+
     async function addGeocodeEarthScript(url) {
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
@@ -117,9 +138,9 @@
     }
 
     function handleGeocodeResults(e) {
-        console.log(e.detail)
+        console.log(e)
         if (e.detail !== null) {
-            const latlon = e.detail.result.center;
+            const latlon = e.result.center;
             // const latlon = e.detail.center; // maptiler
             // const latlon = e.detail.geometry.coordinates; // geocode earth
             riding2024 = getRiding(latlon, ridings2024); // ridings2024
@@ -142,7 +163,7 @@
     }
 
     async function init() {
-
+        addGeocoder(geocodeEl);
 
         // test(testUrl)
         // await addGeocodeEarthScript(geScriptUrl);
@@ -162,7 +183,10 @@
 
     function filterResults(e) {
         console.log(e)
-        return !e.place_name_en.includes('Alberta');
+        const results = e.detail.features.filter(d => {
+            d.place_name.includes('British Columbia');
+        });
+        return results;
     }
 
     console.log(mapboxToken)
@@ -176,13 +200,15 @@
     
     <div class="geocoding">
         <span class="voting-emoji">🗳️</span>
+        <div id="geocoder"></div>
 
-        <Geocoder 
+        <!-- <Geocoder 
             accessToken={mapboxToken}
-            region="BC"
-            on:result={handleGeocodeResults}
+            countries="CA"
             on:error={handleGeocodeError}
-        />
+            on:result={handleGeocodeResults}
+            on:results={filterResults}
+        /> -->
 
         <!-- <ge-autocomplete
             api_key={geApiKey}
@@ -240,6 +266,13 @@
 		max-width: 525px;
 		text-align: center;
 	} */
+    #geocoder {
+        z-index: 1;
+        margin: 20px;
+    }
+    .mapboxgl-ctrl-geocoder {
+        min-width: 100%;
+    }
     .geocoding {
         display: flex;
         justify-content: center;
