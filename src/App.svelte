@@ -164,7 +164,7 @@
         return !e.place_name_en.includes('Alberta');
     }
 
-    console.log()
+    console.log(mapboxToken)
 </script>
 
 <header>
@@ -178,6 +178,7 @@
 
         <Geocoder 
             accessToken={mapboxToken}
+            region="BC"
             on:result={handleGeocodeResults}
             on:error={handleGeocodeError}
         />
