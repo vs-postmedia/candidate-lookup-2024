@@ -42,7 +42,8 @@
                         i.id.split('.').shift() === 'region' && i.text === 'British Columbia'
                      );
                 });
-            }
+            },
+            placeholder: 'Lookup a location...'
         });
         geocoder.addTo(geocodeEl);
         geocoder.on('result', handleGeocodeResults);
