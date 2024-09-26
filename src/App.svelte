@@ -154,7 +154,7 @@
 </main>
 
 <footer>
-    <p class="note">NOTE: Parties have until Sept. 28 to register candidates for the election. They are not required to run candidates in every riding.</p>
+    <p class="note">NOTE: Parties are not required to run candidates in every riding.</p>
     <p class="source">Source:  <a href="https://elections.bc.ca/2024-provincial-election/candidate-list/" target="_blank">Elections B.C.</a>, Political parties</p>
 </footer>
   
