@@ -17,7 +17,8 @@ export default defineConfig({
 	    "$css": path.resolve("./src/css"),
 	    "$fonts": path.resolve("./public/fonts"),
       "$images": path.resolve("./src/images"),
-      "$videos": path.resolve("./public/video")
+      "$videos": path.resolve("./public/video"),
+      "$lib": path.resolve("./src/lib")
     }
   }
 });

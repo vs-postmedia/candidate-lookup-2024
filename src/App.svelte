@@ -1,11 +1,13 @@
 <script>
     // COMPONENTS
-    import { onMount } from 'svelte';
     import Papa from 'papaparse';
+    import { onMount } from 'svelte';
+    import '$lib/autocomplete-element';
     import * as turf from '@turf/helpers';
     import PointsWithinPolygon from '@turf/points-within-polygon';
     import RidingDetails from '$components/RidingDetails.svelte';
-    import GeocodingControl from "@maptiler/geocoding-control/svelte/GeocodingControl.svelte";
+    // import Autocomplete from '$components/Autocomplete.svelte';
+    // import GeocodingControl from "@maptiler/geocoding-control/svelte/GeocodingControl.svelte";
 
     // DATA
     import ridings2024 from '$data/riding-boundaries-2024.js';
@@ -15,11 +17,18 @@
     const candidatesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=0&single=true&output=csv';
     const resultsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=715680360&single=true&output=csv';
     const geScriptUrl = 'https://cdn.jsdelivr.net/npm/@geocodeearth/autocomplete-element/dist/bundle.js';
+    const testUrl = `https://api.geocode.earth/v1/autocomplete?api_key=${geApiKey}&text=vancouver`
 
 
     // VARIABLES
     let candidateData, resultsData;
     const bcBbox = [-139.595032,48.302552,-113.887024,60.199227];
+    const apiParams = {
+        boundary: {
+            country:'CA',
+            gid: 'whosonfirst:region:85682117'
+        }
+    }
 
     // REACTIVE VARIABLES
     $: ridingResults = [];
@@ -27,14 +36,31 @@
     $: riding2024 = '';
     $: ridingCandidates = [];
 
+    function test(url) {
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                console.log(data.features)
+            })
+            .catch(error => {
+                console.error('Error fetching autocomplete results:', error);
+            });
+
+    }
+
+
     // async function addGeocodeEarthScript(url) {
     //     const script = document.createElement('script');
     //     script.src = url;
     //     script.type = 'module';
     //     document.body.appendChild(script)
     // }
-    addGeocodeEarthScript(geScriptUrl);
-
     async function addGeocodeEarthScript(url) {
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
@@ -117,7 +143,12 @@
     }
 
     async function init() {
-        
+
+
+        test(testUrl)
+        await addGeocodeEarthScript(geScriptUrl);
+
+
         // fetch candidate data
         candidateData = await fetchData(candidatesUrl);
 
@@ -144,6 +175,13 @@
     
     <div class="geocoding">
         <span class="voting-emoji">🗳️</span>
+
+        <!-- <Autocomplete
+            apiKey={geApiKey}
+            params={apiParams}
+            placeholder='Enter an address or city'
+        ></Autocomplete> -->
+
         <ge-autocomplete
             api_key={geApiKey}
             boundary.country='CA'
