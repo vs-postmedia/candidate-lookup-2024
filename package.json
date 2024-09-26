@@ -21,9 +21,13 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@beyonk/svelte-mapbox": "^9.1.1",
+		"@geocodeearth/core-js": "^0.0.8",
 		"@maptiler/geocoding-control": "^1.3.3",
 		"@turf/helpers": "^7.1.0",
 		"@turf/points-within-polygon": "^7.1.0",
+		"lodash.escape": "^4.0.1",
+		"lodash.throttle": "^4.1.1",
 		"papaparse": "^5.4.1"
 	}
 }

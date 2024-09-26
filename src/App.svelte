@@ -2,8 +2,9 @@
     // COMPONENTS
     import Papa from 'papaparse';
     import { onMount } from 'svelte';
-    import '$lib/autocomplete-element';
+    // import '$lib/autocomplete-element';
     import * as turf from '@turf/helpers';
+    import { Geocoder, controls } from '@beyonk/svelte-mapbox';
     import PointsWithinPolygon from '@turf/points-within-polygon';
     import RidingDetails from '$components/RidingDetails.svelte';
     // import Autocomplete from '$components/Autocomplete.svelte';
@@ -12,7 +13,8 @@
     // DATA
     import ridings2024 from '$data/riding-boundaries-2024.js';
     import ridings2020 from '$data/riding-boundaries-2020.js';
-    const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
+    const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+    // const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
     const geApiKey = import.meta.env.VITE_GE_API_KEY;
     const candidatesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=0&single=true&output=csv';
     const resultsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=715680360&single=true&output=csv';
@@ -23,12 +25,7 @@
     // VARIABLES
     let candidateData, resultsData;
     const bcBbox = [-139.595032,48.302552,-113.887024,60.199227];
-    const apiParams = {
-        boundary: {
-            country:'CA',
-            gid: 'whosonfirst:region:85682117'
-        }
-    }
+    const { GeolocateControl } = controls;
 
     // REACTIVE VARIABLES
     $: ridingResults = [];
@@ -114,15 +111,16 @@
         return ridingName;
     }
 
-    function handleGeoCodeError(e) {
+    function handleGeocodeError(e) {
         console.log(e);
     }
 
     function handleGeocodeResults(e) {
         console.log(e.detail)
         if (e.detail !== null) {
+            const latlon = e.detail.result.center;
             // const latlon = e.detail.center; // maptiler
-            const latlon = e.detail.geometry.coordinates; // geocode earth
+            // const latlon = e.detail.geometry.coordinates; // geocode earth
             riding2024 = getRiding(latlon, ridings2024); // ridings2024
             riding2020 = getRiding(latlon, ridings2020); // ridings2020
 
@@ -156,7 +154,7 @@
         resultsData = await fetchData(resultsUrl);
 
         // event handling for GeocodeEarth autocomplete element
-        handleGeocodeEarthEvents();
+        // handleGeocodeEarthEvents();
     }
 
     onMount(init);
@@ -165,6 +163,8 @@
         console.log(e)
         return !e.place_name_en.includes('Alberta');
     }
+
+    console.log()
 </script>
 
 <header>
@@ -176,18 +176,18 @@
     <div class="geocoding">
         <span class="voting-emoji">🗳️</span>
 
-        <!-- <Autocomplete
-            apiKey={geApiKey}
-            params={apiParams}
-            placeholder='Enter an address or city'
-        ></Autocomplete> -->
+        <Geocoder 
+            accessToken={mapboxToken}
+            on:result={handleGeocodeResults}
+            on:error={handleGeocodeError}
+        />
 
-        <ge-autocomplete
+        <!-- <ge-autocomplete
             api_key={geApiKey}
             boundary.country='CA'
             boundary.gid='whosonfirst:region:85682117'
             placeholder='Enter an address or city'
-        ></ge-autocomplete>
+        ></ge-autocomplete> -->
 
         <!-- <GeocodingControl 
             apiKey={mapTilerApiKey}
