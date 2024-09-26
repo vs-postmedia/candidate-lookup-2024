@@ -13,9 +13,10 @@
     // DATA
     import ridings2024 from '$data/riding-boundaries-2024.js';
     import ridings2020 from '$data/riding-boundaries-2020.js';
-    const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
-    // const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
+    // const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+    const mapboxToken = 'pk.eyJ1IjoibmpncmlmZml0aHMiLCJhIjoiY20xam53NTY2MDBmbjJrcHluNGlyOWdubCJ9.n9aEqRoFc8E82Ifn_MBGkw';
     const geApiKey = import.meta.env.VITE_GE_API_KEY;
+    // const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
     const candidatesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=0&single=true&output=csv';
     const resultsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTk-n-FsNcDDFKdo-zB665ebijtYBNE5G9i1WflJYgStgVItlvT26XmzBn_T1Vkn2lKkYggnkVAA2UJ/pub?gid=715680360&single=true&output=csv';
     const geScriptUrl = 'https://cdn.jsdelivr.net/npm/@geocodeearth/autocomplete-element/dist/bundle.js';
