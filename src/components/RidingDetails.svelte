@@ -21,7 +21,9 @@
                     <li style="border-left: 8px solid {d.party_color}">
                         <p class="name">{d.candidate}</p>
                         <p class="party">{d.party}</p>
-                        <p><a href={d.url} target="_blank">View bio</a></p>
+                        {#if d.url.length > 0}
+                            <p><a href={d.url} target="_blank">View bio</a></p>
+                        {/if}
                     </li>
                 {/each}
             </ul>
