@@ -23,6 +23,8 @@
                         <p class="party">{d.party}</p>
                         {#if d.url.length > 0}
                             <p><a href={d.url} target="_blank">View bio</a></p>
+                        {:else}
+                            <p class="no-bio">Bio unavailable</p>
                         {/if}
                     </li>
                 {/each}
@@ -103,6 +105,10 @@
     }
     #candidates-list a {
         color: var(--blue01);
+        font-family: BentonSansCond-RegItalic, italic;
+    }
+    #candidates-list .no-bio {
+        color: var(--grey01);
         font-family: BentonSansCond-RegItalic, italic;
     }
     #results-list h3 {
